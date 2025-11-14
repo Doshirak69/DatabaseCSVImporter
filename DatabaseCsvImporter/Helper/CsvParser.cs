@@ -11,10 +11,14 @@ namespace DatabaseCsvImporter.Helper
 {
     public static class CsvParser
     {
+        private const int MinCsvFields = 4;
+        private const int FioPartsCount = 3;
+
         public static CsvRecordDTO ParseLine(string line)
         {
+
             var parts = line.Split(',');
-            if (parts.Length < 4)
+            if (parts.Length < MinCsvFields)
                 throw new FormatException($"Ожидалось минимум 4 поля, получено {parts.Length}");
 
             var result = new CsvRecordDTO();
@@ -24,7 +28,7 @@ namespace DatabaseCsvImporter.Helper
             var fioText = parts[1].Trim();
             var fioParts = SplitBySpaces(fioText);
 
-            if (fioParts.Count != 3)
+            if (fioParts.Count != FioPartsCount)
                 throw new FormatException($"ФИО должно содержать 3 части (Имя Отчество Фамилия), получено: '{fioText}'");
 
             result.FirstName = fioParts[0]; 
