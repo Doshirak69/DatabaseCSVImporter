@@ -54,34 +54,6 @@ namespace DatabaseCsvImporter.Service
             return result;
         }
 
-        public async Task<ImportResult> ImportFromCsvLines(IEnumerable<string> lines)
-        {
-            var result = new ImportResult();
-
-            foreach (var line in lines)
-            {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
-                try
-                {
-                    await ProcessLine(line);
-                    result.SuccessCount++;
-                }
-                catch (Exception ex)
-                {
-                    result.Errors.Add(new ImportErrorModel
-                    {
-                        Line = line,
-                        ErrorMessage = ex.Message
-                    });
-                    result.ErrorCount++;
-                }
-            }
-
-            return result;
-        }
-
         private async Task ProcessLine(string line)
         {
             try
