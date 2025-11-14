@@ -56,28 +56,22 @@ namespace DatabaseCsvImporter.Service
 
         private async Task ProcessLine(string line)
         {
-            try
-            {
-                var dto = CsvParser.ParseLine(line);
+            var dto = CsvParser.ParseLine(line);
 
-                var employee = dto.ToEmployeeModel();
+            var employee = dto.ToEmployeeModel();
 
-                var subdivisionTask = _dbService.GetOrCreateDepartmentIdAsync(employee.Department);
-                var positionTask = _dbService.GetOrCreatePositionIdAsync(employee.Position);
+            var subdivisionTask = _dbService.GetOrCreateDepartmentIdAsync(employee.Department);
+            var positionTask = _dbService.GetOrCreatePositionIdAsync(employee.Position);
 
-                await Task.WhenAll(subdivisionTask, positionTask);
+            await Task.WhenAll(subdivisionTask, positionTask);
 
-                await _dbService.GetOrCreateEmployeeIdAsync(employee);
+            await _dbService.GetOrCreateEmployeeIdAsync(employee);
 
-                var cityTasks = employee.Cities.Select(city =>
-                    _dbService.UpsertCityStatusAsync(city, employee.Id));
+            var cityTasks = employee.Cities.Select(city =>
+                _dbService.UpsertCityStatusAsync(city, employee.Id));
 
-                await Task.WhenAll(cityTasks);
-            }
-            catch
-            {
-                throw;
-            }
+            await Task.WhenAll(cityTasks);
+            
         }
 
     }
