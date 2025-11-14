@@ -38,12 +38,6 @@ namespace SimpleCsvImporter
 
             }
 
-            if (!File.Exists(csvPath))
-            {
-                Console.WriteLine($"Файл не найден: {csvPath}");
-                return 2;
-            }
-
             try
             {
                 await using var dbService = new DatabaseService(connectionString);
